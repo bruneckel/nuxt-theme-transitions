@@ -1,0 +1,42 @@
+{
+  "name": "nuxt-theme-transition",
+  "version": "0.1.0",
+  "description": "Animated dark/light theme transitions for Nuxt using the View Transitions API",
+  "author": "Bruno Neckel",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bruneckel/nuxt-theme-transition"
+  },
+  "bugs": "https://github.com/bruneckel/nuxt-theme-transition/issues",
+  "homepage": "https://github.com/bruneckel/nuxt-theme-transition#readme",
+  "peerDependencies": {
+    "@nuxtjs/color-mode": ">=3.0.0",
+    "nuxt": ">=3.0.0"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^3.0.0"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "theme",
+    "dark-mode",
+    "color-mode",
+    "view-transitions",
+    "spread",
+    "fade",
+    "transition",
+    "animation"
+  ]
+}
