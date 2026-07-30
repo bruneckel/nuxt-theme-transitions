@@ -7,8 +7,8 @@ export type { ThemeOrigin, ThemeTransitionOptions } from '../../types';
 export const useThemeTransition = () => {
 	const colorMode = useColorMode();
 	const isAnimating = useState('theme-transition-animating', () => false);
-	const { variant: configVariant, effects }
-		= useRuntimeConfig().public.themeTransition;
+	const themeTransitionConfig = useRuntimeConfig().public.themeTransition;
+	const { variant: configVariant, effects } = themeTransitionConfig;
 
 	const applyTheme = async (
 		nextMode: ThemeMode,

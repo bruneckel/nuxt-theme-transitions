@@ -1,24 +1,24 @@
-# nuxt-theme-transition
+# nuxt-theme-transitions
 
 Animated dark/light theme toggle for Nuxt. Requires [`@nuxtjs/color-mode`](https://color-mode.nuxtjs.org/).
 
 ## Install
 
 ```bash
-npm install nuxt-theme-transition @nuxtjs/color-mode
+npm install nuxt-theme-transitions @nuxtjs/color-mode
 ```
 
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/color-mode', 'nuxt-theme-transition'],
+  modules: ['@nuxtjs/color-mode', 'nuxt-theme-transitions'],
 })
 ```
 
 Local module (monorepo):
 
 ```ts
-modules: ['@nuxtjs/color-mode', './modules/nuxt-theme-transition'],
+modules: ['@nuxtjs/color-mode', './modules/nuxt-theme-transition/src/module.ts'],
 ```
 
 ## Usage

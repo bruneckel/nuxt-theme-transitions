@@ -1,13 +1,17 @@
 {
-  "name": "nuxt-theme-transition",
+  "name": "nuxt-theme-transitions",
   "version": "0.1.0",
   "description": "Animated dark/light theme transitions for Nuxt using the View Transitions API",
   "author": "Bruno Neckel",
   "license": "MIT",
   "type": "module",
-  "main": "./index.ts",
+  "main": "./dist/module.mjs",
+  "types": "./dist/types.d.mts",
   "exports": {
-    ".": "./index.ts"
+    ".": {
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
+    }
   },
   "files": [
     "dist",
@@ -16,16 +20,35 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bruneckel/nuxt-theme-transition"
+    "url": "git+https://github.com/bruneckel/nuxt-theme-transitions.git"
   },
-  "bugs": "https://github.com/bruneckel/nuxt-theme-transition/issues",
-  "homepage": "https://github.com/bruneckel/nuxt-theme-transition#readme",
+  "bugs": {
+    "url": "https://github.com/bruneckel/nuxt-theme-transitions/issues"
+  },
+  "homepage": "https://github.com/bruneckel/nuxt-theme-transitions#readme",
   "peerDependencies": {
-    "@nuxtjs/color-mode": ">=3.0.0",
-    "nuxt": ">=3.0.0"
+    "@nuxtjs/color-mode": ">=4.0.0",
+    "nuxt": ">=4.0.0"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.0.0"
+    "@nuxt/kit": "^4.0.0"
+  },
+  "devDependencies": {
+    "@nuxt/cli": "^3.37.0",
+    "@nuxt/module-builder": "^1.0.3",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.8.0",
+    "nuxt": "^4.0.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.65.0"
+  },
+  "scripts": {
+    "build": "nuxt-module-build build",
+    "prepack": "nuxt-module-build build",
+    "lint": "eslint ."
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "nuxt",

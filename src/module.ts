@@ -18,7 +18,7 @@ export type {
 
 export default defineNuxtModule<ThemeTransitionModuleOptions>({
 	meta: {
-		name: 'nuxt-theme-transition',
+		name: 'nuxt-theme-transitions',
 		configKey: 'themeTransition',
 	},
 	defaults: {
@@ -46,6 +46,7 @@ export default defineNuxtModule<ThemeTransitionModuleOptions>({
 
 		nuxt.hook('prepare:types', ({ references }) => {
 			references.push({ path: resolver.resolve('./types.ts') });
+			references.push({ path: resolver.resolve('./shims-nuxt.d.ts') });
 		});
 	},
 });
