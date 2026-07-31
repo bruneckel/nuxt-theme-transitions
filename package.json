@@ -1,6 +1,6 @@
 {
   "name": "@bruneckel/nuxt-theme-transitions",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Animated dark/light theme transitions for Nuxt using the View Transitions API",
   "author": "Bruno Neckel",
   "license": "MIT",
