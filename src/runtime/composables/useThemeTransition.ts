@@ -1,6 +1,7 @@
+import { useColorMode, useRuntimeConfig, useState } from '#imports';
 import type { ThemeMode, ThemeTransitionOptions } from '../../types';
-import { getEffectOrThrow } from '../effects';
 import { runThemeTransition } from '../utils/runThemeTransition';
+import { getEffectOrThrow } from '../effects';
 
 export type { ThemeOrigin, ThemeTransitionOptions } from '../../types';
 

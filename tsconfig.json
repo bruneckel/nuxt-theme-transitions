@@ -6,7 +6,10 @@
     "target": "ES2022",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "#imports": ["./src/auto-imports.d.ts"]
+    }
   },
   "include": ["src/**/*"]
 }
