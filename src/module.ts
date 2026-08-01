@@ -9,6 +9,7 @@ import {
 	buildThemeTransitionCss,
 	resolveThemeTransitionEffects,
 } from './runtime/effects';
+import { buildColorModeInitScript } from './runtime/utils/colorMode';
 import type { ThemeTransitionModuleOptions } from './types';
 
 export type {
@@ -40,6 +41,13 @@ export default defineNuxtModule<ThemeTransitionModuleOptions>({
 		});
 
 		nuxt.options.css.push('#build/theme-transition.css');
+
+		nuxt.options.app.head.script ||= [];
+		nuxt.options.app.head.script.push({
+			key: 'nuxt-theme-transitions-color-mode-init',
+			innerHTML: buildColorModeInitScript(),
+			tagPosition: 'head',
+		});
 
 		addImportsDir(resolver.resolve('./runtime/composables'));
 		addImportsDir(resolver.resolve('./runtime/utils'));
