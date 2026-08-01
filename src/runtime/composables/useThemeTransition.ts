@@ -1,15 +1,49 @@
-import { useColorMode, useRuntimeConfig, useState } from '#imports';
+import { onMounted, onUnmounted, useRuntimeConfig, useState } from '#imports';
 import type { ThemeMode, ThemeTransitionOptions } from '../../types';
-import { runThemeTransition } from '../utils/runThemeTransition';
 import { getEffectOrThrow } from '../effects';
+import {
+	applyThemeClass,
+	readStoredPreference,
+	resolveTheme,
+	writeStoredPreference,
+} from '../utils/colorMode';
+import { runThemeTransition } from '../utils/runThemeTransition';
 
 export type { ThemeOrigin, ThemeTransitionOptions } from '../../types';
 
 export const useThemeTransition = () => {
-	const colorMode = useColorMode();
+	const theme = useState<'light' | 'dark'>('theme-transition-color', () =>
+		resolveTheme(readStoredPreference()),
+	);
 	const isAnimating = useState('theme-transition-animating', () => false);
 	const themeTransitionConfig = useRuntimeConfig().public.themeTransition;
 	const { variant: configVariant, effects } = themeTransitionConfig;
+
+	onMounted(() => {
+		theme.value = resolveTheme(readStoredPreference());
+
+		if (typeof matchMedia === 'undefined') {
+			return;
+		}
+
+		const media = matchMedia('(prefers-color-scheme: dark)');
+
+		const handleSystemChange = () => {
+			if (readStoredPreference() !== 'system') {
+				return;
+			}
+
+			const resolved = resolveTheme('system');
+			applyThemeClass(resolved);
+			theme.value = resolved;
+		};
+
+		media.addEventListener('change', handleSystemChange);
+
+		onUnmounted(() => {
+			media.removeEventListener('change', handleSystemChange);
+		});
+	});
 
 	const applyTheme = async (
 		nextMode: ThemeMode,
@@ -28,7 +62,10 @@ export const useThemeTransition = () => {
 			origin,
 			effects[variant],
 			() => {
-				colorMode.preference = nextMode;
+				const resolved = resolveTheme(nextMode);
+				writeStoredPreference(nextMode);
+				applyThemeClass(resolved);
+				theme.value = resolved;
 			},
 			(value) => {
 				isAnimating.value = value;
@@ -41,7 +78,7 @@ export const useThemeTransition = () => {
 			return;
 		}
 
-		const nextMode = colorMode.value === 'dark' ? 'light' : 'dark';
+		const nextMode = theme.value === 'dark' ? 'light' : 'dark';
 		await applyTheme(nextMode, options);
 	};
 
@@ -53,7 +90,7 @@ export const useThemeTransition = () => {
 			return;
 		}
 
-		if (mode !== 'system' && colorMode.value === mode) {
+		if (mode !== 'system' && theme.value === mode) {
 			return;
 		}
 
@@ -61,6 +98,7 @@ export const useThemeTransition = () => {
 	};
 
 	return {
+		theme,
 		isAnimating,
 		toggleTheme,
 		setTheme,
