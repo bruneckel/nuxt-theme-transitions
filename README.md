@@ -15,6 +15,8 @@ export default defineNuxtConfig({
 })
 ```
 
+If you're migrating from `@nuxtjs/color-mode`, remove it from the `modules` array (and uninstall it).
+
 ## Usage
 
 ```vue
@@ -53,16 +55,6 @@ themeTransition: {
 ```
 
 Restart the dev server after changing `themeTransition`.
-
-## Theme management
-
-This package owns theme detection and persistence itself — no `@nuxtjs/color-mode` or other external dependency is needed.
-
-- **`dark`/`light` class on `<html>`** — the resolved theme is applied as a class on `document.documentElement` (`dark` or `light`, one added, the other removed). This is what makes Tailwind's `darkMode: 'class'` strategy work out of the box.
-- **`localStorage['theme']`** — the user's preference (`'light'`, `'dark'`, or `'system'`) is persisted under the `theme` key.
-- **Inline `<head>` script** — the module injects a small anti-flash script into `<head>` that applies the correct class before the page paints, so there's no flash of the wrong theme on load.
-
-**Migrating from `@nuxtjs/color-mode`?** Remove it entirely — delete it from the `modules` array in `nuxt.config.ts` (and uninstall the package). Both modules manage the same `<html>` class, and having both installed doesn't throw or warn — they just silently fight over the class, which is confusing to debug.
 
 ## Variants
 
