@@ -17,6 +17,9 @@ export default defineNuxtConfig({
 
 If you're migrating from `@nuxtjs/color-mode`, remove it from the `modules` array (and uninstall it).
 
+> [!IMPORTANT]
+> Using Tailwind? Set `darkMode: 'class'` in your Tailwind config. Tailwind's default (`'media'`) ignores the `dark`/`light` class this package applies to `<html>`, so the toggle will silently have no visual effect without it.
+
 ## Usage
 
 ```vue
