@@ -1,5 +1,7 @@
 # nuxt-theme-transitions
 
+[![npm version](https://img.shields.io/npm/v/@bruneckel/nuxt-theme-transitions.svg)](https://www.npmjs.com/package/@bruneckel/nuxt-theme-transitions)
+
 Animated dark/light theme toggle for Nuxt.
 
 ## Install
