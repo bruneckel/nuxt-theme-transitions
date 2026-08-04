@@ -96,6 +96,10 @@ setTheme('dark', { variant: 'fade' })
 | Firefox | Instant switch |
 | Reduced motion | Instant switch |
 
+## Known issues
+
+- Chrome 150 has a regression where the `spread` effect's clip-path animation can render from the wrong position after the browser window moves between displays with different DPI/scaling. This is a Chrome bug, not something this package can work around. It's already fixed upstream and verified in Chrome Canary; the fix should reach the Stable channel in a future release. See [Chromium issue #535696703](https://issues.chromium.org/issues/535696703).
+
 ## License
 
 [MIT](LICENSE) © Bruno Neckel
