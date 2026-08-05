@@ -1,4 +1,5 @@
 import {
+	addImports,
 	addImportsDir,
 	addTemplate,
 	createResolver,
@@ -6,18 +7,18 @@ import {
 } from '@nuxt/kit';
 
 import {
+	buildColorModeInitScript,
 	buildThemeTransitionCss,
-	resolveThemeTransitionEffects,
-} from './runtime/effects';
-import { buildColorModeInitScript } from './runtime/utils/colorMode';
-import type { ThemeTransitionModuleOptions } from './types';
+	resolveThemeEffects,
+} from '@bruneckel/theme-transitions-core';
+import type { ThemeOptions } from '@bruneckel/theme-transitions-core';
 
 export type {
 	ThemeEffect,
-	ThemeTransitionModuleOptions as ModuleOptions,
-} from './types';
+	ThemeOptions as ModuleOptions,
+} from '@bruneckel/theme-transitions-core';
 
-export default defineNuxtModule<ThemeTransitionModuleOptions>({
+export default defineNuxtModule<ThemeOptions>({
 	meta: {
 		name: 'nuxt-theme-transitions',
 		configKey: 'themeTransition',
@@ -28,12 +29,10 @@ export default defineNuxtModule<ThemeTransitionModuleOptions>({
 	setup(options, nuxt) {
 		const resolver = createResolver(import.meta.url);
 		const variant = options.variant ?? 'fade';
-		const effects = resolveThemeTransitionEffects({ ...options, variant });
+		const resolvedOptions = { ...options, variant };
+		const effects = resolveThemeEffects(resolvedOptions);
 
-		nuxt.options.runtimeConfig.public.themeTransition = {
-			variant,
-			effects,
-		};
+		nuxt.options.runtimeConfig.public.themeTransition = resolvedOptions;
 
 		addTemplate({
 			filename: 'theme-transition.css',
@@ -50,7 +49,11 @@ export default defineNuxtModule<ThemeTransitionModuleOptions>({
 		});
 
 		addImportsDir(resolver.resolve('./runtime/composables'));
-		addImportsDir(resolver.resolve('./runtime/utils'));
+
+		addImports([
+			{ name: 'originFromEvent', from: '@bruneckel/theme-transitions-core' },
+			{ name: 'originFromElement', from: '@bruneckel/theme-transitions-core' },
+		]);
 
 		nuxt.hook('prepare:types', ({ references }) => {
 			references.push({ path: resolver.resolve('./types.ts') });

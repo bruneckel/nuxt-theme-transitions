@@ -48,14 +48,13 @@ Disable the button with `:disabled="isAnimating"` to avoid double-clicks while t
 | Option | Default | Description |
 |--------|---------|-------------|
 | `variant` | `'fade'` | `'spread'` (circle from click) or `'fade'` (crossfade) |
-| `duration` | `'1s'` / `'400ms'` | How long the animation lasts (e.g. `'2s'`) |
-| `easing` | per variant | Animation easing |
-| `radius` | `'150vmax'` | Spread circle size (spread only) |
+| `duration` | `'1.5s'` (spread) / `'400ms'` (fade) | How long the animation lasts (e.g. `'2s'`) |
+| `easing` | `'ease'` | Fade only, any CSS easing function. `spread`'s easing and clip-path radius are fixed and not configurable |
 
 ```ts
 themeTransition: {
   variant: 'spread',
-  duration: '1s',
+  duration: '1.5s',
 }
 ```
 
@@ -76,6 +75,8 @@ toggleTheme({ origin: originFromElement(buttonRef.value) })
 toggleTheme({ variant: 'fade' })
 setTheme('dark', { variant: 'fade' })
 ```
+
+`toggleTheme`/`setTheme` also accept a `duration` (and, for `fade`, an `easing`) override, e.g. `toggleTheme({ duration: '2s' })`. This overrides the module's configured value for that one call only.
 
 ## API
 

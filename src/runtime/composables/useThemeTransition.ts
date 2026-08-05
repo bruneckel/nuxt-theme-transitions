@@ -1,100 +1,51 @@
 import { onMounted, onUnmounted, useRuntimeConfig, useState } from '#imports';
-import type { ThemeMode, ThemeTransitionOptions } from '../../types';
-import { getEffectOrThrow } from '../effects';
-import {
-	applyThemeClass,
-	readStoredPreference,
-	resolveTheme,
-	writeStoredPreference,
-} from '../utils/colorMode';
-import { runThemeTransition } from '../utils/runThemeTransition';
+import { getController } from '@bruneckel/theme-transitions-core';
+import type {
+	ThemeController,
+	ThemeMode,
+	TransitionOptions,
+} from '@bruneckel/theme-transitions-core';
 
-export type { ThemeOrigin, ThemeTransitionOptions } from '../../types';
+export type { ThemeOrigin, TransitionOptions } from '@bruneckel/theme-transitions-core';
 
 export const useThemeTransition = () => {
-	const theme = useState<'light' | 'dark'>('theme-transition-color', () =>
-		resolveTheme(readStoredPreference()),
-	);
+	const moduleOptions = useRuntimeConfig().public.themeTransition;
+
+	const theme = useState<'light' | 'dark'>('theme-transition-color', () => 'light');
 	const isAnimating = useState('theme-transition-animating', () => false);
-	const themeTransitionConfig = useRuntimeConfig().public.themeTransition;
-	const { variant: configVariant, effects } = themeTransitionConfig;
+
+	let controller: ThemeController | undefined;
+
+	const requireController = (): ThemeController => {
+		if (!controller) {
+			throw new Error(
+				'useThemeTransition: toggleTheme/setTheme was called before the component mounted, or outside a browser context.',
+			);
+		}
+
+		return controller;
+	};
 
 	onMounted(() => {
-		theme.value = resolveTheme(readStoredPreference());
+		controller = getController(moduleOptions);
 
-		if (typeof matchMedia === 'undefined') {
-			return;
-		}
-
-		const media = matchMedia('(prefers-color-scheme: dark)');
-
-		const handleSystemChange = () => {
-			if (readStoredPreference() !== 'system') {
-				return;
-			}
-
-			const resolved = resolveTheme('system');
-			applyThemeClass(resolved);
-			theme.value = resolved;
+		const sync = () => {
+			const state = controller!.getState();
+			theme.value = state.theme;
+			isAnimating.value = state.isAnimating;
 		};
 
-		media.addEventListener('change', handleSystemChange);
-
-		onUnmounted(() => {
-			media.removeEventListener('change', handleSystemChange);
-		});
+		sync();
+		const unsubscribe = controller.subscribe(sync);
+		onUnmounted(unsubscribe);
 	});
 
-	const applyTheme = async (
-		nextMode: ThemeMode,
-		options: ThemeTransitionOptions = {},
-	) => {
-		const variant = options.variant ?? configVariant;
-		const definition = getEffectOrThrow(variant);
-		const origin = options.origin ?? null;
-
-		if (definition.requiresOrigin && !origin) {
-			throw new Error(`Theme variant "${variant}" requires an origin point`);
-		}
-
-		await runThemeTransition(
-			definition,
-			origin,
-			effects[variant],
-			() => {
-				const resolved = resolveTheme(nextMode);
-				writeStoredPreference(nextMode);
-				applyThemeClass(resolved);
-				theme.value = resolved;
-			},
-			(value) => {
-				isAnimating.value = value;
-			},
-		);
+	const toggleTheme = async (options?: TransitionOptions) => {
+		await requireController().toggleTheme(options);
 	};
 
-	const toggleTheme = async (options: ThemeTransitionOptions = {}) => {
-		if (isAnimating.value) {
-			return;
-		}
-
-		const nextMode = theme.value === 'dark' ? 'light' : 'dark';
-		await applyTheme(nextMode, options);
-	};
-
-	const setTheme = async (
-		mode: ThemeMode,
-		options: ThemeTransitionOptions = {},
-	) => {
-		if (isAnimating.value) {
-			return;
-		}
-
-		if (mode !== 'system' && theme.value === mode) {
-			return;
-		}
-
-		await applyTheme(mode, options);
+	const setTheme = async (mode: ThemeMode, options?: TransitionOptions) => {
+		await requireController().setTheme(mode, options);
 	};
 
 	return {
