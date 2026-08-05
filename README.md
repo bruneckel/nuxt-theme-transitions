@@ -67,14 +67,14 @@ Restart the dev server after changing `themeTransition`.
 
 ## Variants
 
-**spread** — circle expands from the click. Pass an origin:
+**spread**: circle expands from the click. Pass an origin:
 
 ```ts
 toggleTheme({ origin: originFromEvent($event) })
 toggleTheme({ origin: originFromElement(buttonRef.value) })
 ```
 
-**fade** — smooth crossfade, no origin needed:
+**fade**: smooth crossfade, no origin needed:
 
 ```ts
 toggleTheme({ variant: 'fade' })
